@@ -36,6 +36,6 @@ diff.backwardPass(tape, final);
 
 4. Future extension for other operations: dd support for more mathematical operations such as sin, cos, exp, and beyond.
 
-a. In tape class, add a new entry to the NodeType enum and add a method to create a node for the new operation.
-c. In Differentiator class Extend forwardPass() Logic and backwardPass() Logic
+a. In tape class,add a new entry to the NodeType emun and add method to create a node for the new operation.
+c. In Differentiator class extend forwardPass() logic and backwardPass() logic
 

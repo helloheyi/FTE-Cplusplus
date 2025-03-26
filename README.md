@@ -23,9 +23,7 @@ This project implements automatic differentitation by backpropagation and build 
 
 3. Compile code and Function Evaluated
 
-\[
-f(x) \;=\; 5 \;+\; x^3 \;+\; \frac{\ln\Bigl((x^2 - 5)\,\bigl(4 - 3x\bigr)\Bigr)}{(x - 4)}
-\]
+f(x) = 5 + x^3 - In((x^2-5)*(4-3*x)/(x-4)
 create an object: Tape tape;
 Create a variable node for x = 2.
 e.g: int xIdx = tape.variable(2.0);

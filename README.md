@@ -23,19 +23,20 @@ This project implements automatic differentitation by backpropagation and build 
 
 3. Compile code and Function Evaluated
 
-f(x) = 5 + x^3 - In((x^2-5)*(4-3*x)/(x-4)
-create an object: Tape tape;
-Create a variable node for x = 2.
-e.g: int xIdx = tape.variable(2.0);
-e.g: x^2 is a pow node as int x2 = tape.pow(xIdx, 2.0);
-e.g. x^2 - 5 as int left = tape.sub(x2, tape.constant(5.0));
-other operations can be referred in main function
-Differentiator diff;
-diff.forwardPass(tape);           
-diff.backwardPass(tape, final);    
+- f(x) = 5 + x^3 - In((x^2-5)*(4-3*x)/(x-4)
+        - create an object: Tape tape;
+        - Create a variable node for x = 2.
+        - e.g: int xIdx = tape.variable(2.0);
+        - e.g: x^2 is a pow node as int x2 = tape.pow(xIdx, 2.0);
+        - e.g. x^2 - 5 as int left = tape.sub(x2, tape.constant(5.0)); other operations can be referred in main function
+        - Differentiator diff;
+        - diff.forwardPass(tape);           
+        - diff.backwardPass(tape, final);    
 
-4. Future extension for other operations: dd support for more mathematical operations such as sin, cos, exp, and beyond.
+4. Future extension for other operations: 
+- support for more mathematical operations such as sin, cos, exp, and beyond.
 
-a. In tape class,add a new entry to the NodeType emun and add method to create a node for the new operation.
-c. In Differentiator class extend forwardPass() logic and backwardPass() logic
+        -  In tape class,add a new entry to the NodeType emun and add method to create a node for the new operation.
+
+        -  In Differentiator class extend forwardPass() logic and backwardPass() logic
 

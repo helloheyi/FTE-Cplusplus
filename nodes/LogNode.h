@@ -13,18 +13,18 @@
 
 /*
     Log of a node.
-    param I Pointer to the input node
+    param I Shared Smart Pointer to the input node
     forward(): calcuate In(x), with running time error  checks.
     backward(): backpropagate gradients, with running time error  checks.
  */
 class LogNode: public Node {
 public:
-    Node* input;
+    std::shared_ptr<Node> input;
     /*
     Constructor to initialize LogNode with an input node.
-    param I Pointer to the input node.
+    param I Shared Smart Pointer to the input node.
     */
-    LogNode(Node* I);
+    LogNode(std::shared_ptr<Node> I);
     /*
     Forward pass: ln(x)
     */

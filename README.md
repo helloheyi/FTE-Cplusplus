@@ -2,7 +2,7 @@
 ## Project Structure
  - main.cpp: The main entry point for the project with test scenarios: one variable function, two variable function, cut edge scenairos described below
  
-- Tape.hpp / Tape.cpp: Implements the Tape class to store and manage operations.
+- Tape.hpp / Tape.cpp: Implements the Tape class to store and manage operations using smart pointers (std::shared_ptr) for efficient memory management and automatic cleanup.
 
 - nodes/: Contains all the node classes representing operations (AddNode, ConstantNode, DivNode, LogNode, MulNode, PowNode, SubNode, VariableNode).
 
@@ -10,7 +10,7 @@
 - The Tape class is responsible for performing forward and backward passes to compute values and gradients and also includes error handling to display warnings if no nodes are available for computation. 
 - Forward Pass: computes the output values of each node using the forward() method.
 - Backward Pass: computes gradients using backpropagation with the backward() method.
-- Memory Management: is handled by the destructor, ensuring dynamically created nodes are properly deallocated.
+- Memory Management: Smart pointers (std::shared_ptr) handle memory automatically using reference counting, eliminating the need for manual destructor.
 
 ## Node Class Overview
 

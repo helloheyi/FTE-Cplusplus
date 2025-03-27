@@ -12,7 +12,7 @@
     param B Pointer to base node
     param exp The constant exponent
 */
-PowNode::PowNode(Node* B, double exp) : base(B), exponent(exp) {};
+PowNode::PowNode(std::shared_ptr<Node> B, double exp) : base(B), exponent(exp) {};
 /*
     Forward pass: X^N
     throws std::runtime_error If the result overflows to infinity.

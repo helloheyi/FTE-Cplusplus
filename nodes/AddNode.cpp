@@ -8,10 +8,12 @@
 #include "AddNode.h"
 /*
 constructor to initialize left and right input nodes.
-param l Pointer to left node
-param r Pointer to right node
+param l Shared Smart Pointer to left node
+param r Shared Smart Pointer to right node
 */
-AddNode::AddNode(Node* L, Node* R) : left(L), right(R) {}
+// Improve to smart pointer: std::shared_ptr
+AddNode::AddNode(std::shared_ptr<Node> L,
+                 std::shared_ptr<Node> R) : left(L), right(R) {}
 /*
  Forward pass: x+y
  */

@@ -9,10 +9,10 @@
 #include "DivNode.h"
 /*
 constructor to initialize numerator and denominator
-param l Pointer to left node -- numerator
-param r Pointer to right node -- denominator
+param l Shared Smart Pointer to left node -- numerator
+param r Shared Smart Pointer to right node -- denominator
 */
-DivNode:: DivNode(Node* L, Node* R) : left(L), right(R) {};
+DivNode:: DivNode(std::shared_ptr<Node> L,std::shared_ptr<Node> R) : left(L), right(R) {};
 
 /*
 Forward pass: x / y
@@ -34,7 +34,6 @@ throws std::runtime_error If division by zero is detected.
 void DivNode::backward() {
     double lv = left->getValue(), rv = right->getValue();
     if (right->getValue() == 0.0) {throw std::runtime_error("Division by zero in DivNode::backward().");}
-    if (std::isnan(rv) || std::isinf(rv))
     left->grad += grad / rv;
     right->grad -= grad * lv / (rv * rv);
 }

@@ -73,7 +73,7 @@ auto runGraphTest1(double x_0) {
     // forward and backward pass
     tape.forward();
     tape.backward();
-    return std::vector<double>{final->getValue(), x->getGrad()};
+    return std::vector<double>{x->getValue(), x->getGrad()};
 }
 
 
@@ -117,8 +117,8 @@ int main() {
     std::cout << "f1'(" << x_0 << ") = " << f1_result[1] << std::endl;
     
     
-    // two variables test case
-    // f(x,y) = x^3 * y+ln(x) * y
+//     two variables test case
+//     f(x,y) = x^3 * y+ln(x) * y
     double test2_x_0 = 2.0;
     double test2_y_0 = 3.0;
     auto f2_result =runGraphTest2(test2_x_0,test2_y_0);

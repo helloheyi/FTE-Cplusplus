@@ -14,18 +14,18 @@
 
 /*
     substract of two nodes.
-    param l Pointer to left node
-    param r Pointer to right node
+    param l Shared Smart Pointer to left node
+    param r Shared Smart Pointer to right node
     forward(): calcuate x - y
     backward(): backpropagate gradients
 
  */
 class SubNode:public Node{
     public:
-        Node* left;
-        Node* right;
+        std::shared_ptr<Node> left;
+        std::shared_ptr<Node> right;
        
-    SubNode(Node* L, Node* R);
+    SubNode(std::shared_ptr<Node> L, std::shared_ptr<Node> R);
     void forward() override;
     void backward() override;
 };

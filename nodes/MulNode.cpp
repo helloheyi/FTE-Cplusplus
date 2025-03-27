@@ -9,11 +9,11 @@
 #include "MulNode.h"
 /*
      constructor to initialize left and right input nodes.
-     param l Pointer to left node
-     param r Pointer to right node
+     param l Shared Smart Pointer to left node
+     param r Shared Smart Pointer to right node
 */
 
-MulNode:: MulNode(Node* L, Node* R) : left(L), right(R) {};
+MulNode:: MulNode(std::shared_ptr<Node> L, std::shared_ptr<Node> R) : left(L), right(R) {};
 /*
      Forward pass: x * y
 */

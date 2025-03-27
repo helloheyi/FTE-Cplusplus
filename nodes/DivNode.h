@@ -13,22 +13,22 @@
 
 /*
     divide of two nodes.
-    param l Pointer to numerator
-    param r Pointer to denominator
+    param l Shared Smart Pointer to numerator
+    param r Shared Smart Pointer to denominator
     forward(): calcuate x / y, with running time error  checks.
     backward(): backpropagate gradients, with running time error  checks.
  
  */
 class DivNode: public Node{
 public:
-    Node* left;
-    Node* right;
+    std::shared_ptr<Node> left;
+    std::shared_ptr<Node> right;
     /*
     constructor to initialize numerator and denominator
     param l Pointer to left node -- numerator
     param r Pointer to right node -- denominator
     */
-    DivNode(Node* L, Node* R);
+    DivNode(std::shared_ptr<Node> L, std::shared_ptr<Node> R);
     /*
     Forward pass
     */

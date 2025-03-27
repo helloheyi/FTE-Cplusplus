@@ -10,6 +10,7 @@
 /*
  forward pass for all nodes in the computational graph.
  node's forward() function is called to compute its output value.
+ // or use auto& node : nodes
  print a warning if no nodes are available for computation.
  */
 void Tape::forward() {
@@ -17,9 +18,10 @@ void Tape::forward() {
         std::cerr << "Warning: No nodes in tape to run Tape::forward." << std::endl;
         return;
     }
-    for (Node* node : nodes) {
+    for (std::shared_ptr<Node> node : nodes) {
         node->forward();
     }
+    
 }
 
 /*
@@ -39,11 +41,10 @@ void Tape::backward() {
     }
 }
 
-/*
- Destructor: every node created using create() is stored in the nodes vector and cleaned up.
- */
-Tape::~Tape() {
-    for (Node* node : nodes) {
-        delete node;
-    }
-}
+// No longer needed becuase of std::shared_ptr handle memory automatically by reference counting.
+
+//Tape::~Tape() {
+//    for (Node* node : nodes) {
+//        delete node;
+//    }
+//}

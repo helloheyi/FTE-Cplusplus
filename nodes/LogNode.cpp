@@ -12,7 +12,7 @@
 Constructor to initialize LogNode with an input node.
 param I Pointer to the input node.
 */
-LogNode::LogNode(Node* I) : input(I) {};
+LogNode::LogNode(std::shared_ptr<Node> I) : input(I) {};
 
 /*
 Forward pass: ln(x)

@@ -12,7 +12,7 @@
 #include <memory>
 /*
     power of a node.
-    param B Pointer to base node
+    param B Shared Smart Pointer to base node
     param exp The constant exponent
     forward(): calcuate X^N, with running time error  checks.
     backward(): backpropagate gradients, with running time error  checks.
@@ -20,14 +20,14 @@
  */
 class PowNode: public Node {
 public:
-    Node* base;
+    std::shared_ptr<Node> base;
     double exponent;
     /*
     constructor to initialize a base node and an exponent.
     param B Pointer to base node
     param exp The constant exponent
     */
-    PowNode(Node* B, double exp);
+    PowNode(std::shared_ptr<Node> B, double exp);
     /*
     Forward pass: X^N
     throws std::runtime_error If the result overflows to infinity.

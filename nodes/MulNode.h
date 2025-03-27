@@ -13,22 +13,22 @@
 
 /*
     multiply of two nodes.
-    param l Pointer to left node
-    param r Pointer to right node
+    param l Shared Smart Pointer to left node
+    param r Shared Smart Pointer to right node
     forward(): calcuate x + y
     backward(): backpropagate gradients
  
  */
 class MulNode:public Node{
 public:
-    Node* left;
-    Node* right;
+    std::shared_ptr<Node> left;
+    std::shared_ptr<Node> right;
     /*
      constructor to initialize left and right input nodes.
-     param l Pointer to left node
-     param r Pointer to right node
+     param l Shared Smart Pointer to left node
+     param r Shared Smart Pointer to right node
     */
-    MulNode(Node* L, Node* R);
+    MulNode(std::shared_ptr<Node> L, std::shared_ptr<Node> R);
     /*
      Forward pass: x * y
      */

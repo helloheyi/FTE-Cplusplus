@@ -12,29 +12,40 @@
 #include <memory>
 
 /*
-    divide of two nodes.
-    param l Shared Smart Pointer to numerator
-    param r Shared Smart Pointer to denominator
-    forward(): calcuate x / y, with running time error  checks.
-    backward(): backpropagate gradients, with running time error  checks.
- 
+ DivNode represents a division operation in the computational graph.
+
+ It computes numerator / denominator in the forward pass and propagates gradients by the chain rule.
  */
 class DivNode: public Node{
 public:
     std::shared_ptr<Node> left;
     std::shared_ptr<Node> right;
     /*
-    constructor to initialize numerator and denominator
-    param l Pointer to left node -- numerator
-    param r Pointer to right node -- denominator
+     Constructs a DivNode that divides 'L' by 'R'.
+
+     Parameters:
+     - L: Shared Smart pointer to the numerator node
+     - R: Shared Smart pointer to the denominator node
     */
     DivNode(std::shared_ptr<Node> L, std::shared_ptr<Node> R);
+    
     /*
-    Forward pass
+     Computes x / y in the forward pass.
+
+     Throws:
+     - std::runtime_error if 'y' is zero.
     */
     void forward() override;
+    
     /*
-    Backward pass
+     Performs the backward pass for x / y.
+
+     Gradients:
+     d(x / y)/dx = 1 / y
+     d(x / y)/dy = -x / (y^2)
+
+     Throws:
+     - std::runtime_error if 'y' is zero.
     */
     void backward() override;
     

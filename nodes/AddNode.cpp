@@ -7,25 +7,35 @@
 
 #include "AddNode.h"
 /*
-constructor to initialize left and right input nodes.
-param l Shared Smart Pointer to left node
-param r Shared Smart Pointer to right node
+ Constructor for AddNode to initialize the left and right input nodes.
+ 
+ Parameters:
+ - L: Shared Smart pointer to the left input node.
+ - R: Shared Smart pointer to the right input node.
 */
-// Improve to smart pointer: std::shared_ptr
 AddNode::AddNode(std::shared_ptr<Node> L,
                  std::shared_ptr<Node> R) : left(L), right(R) {}
-/*
- Forward pass: x+y
- */
 
+/*
+ Computes the sum of the input node values using the formula:
+ value = left->getValue() + right->getValue();
+
+ No return value.
+*/
 void AddNode::forward() {
+    
     value = left->getValue() + right->getValue();
 }
-/*
- Backward pass: x+y
- ∂(x + y)/∂x = 1; ∂(x + y)/∂y = 1, both receive full gradient
- */
 
+/*
+ Propagates gradients from the output node to both input nodes:
+
+ Gradients:
+ d(x + y)/dx = 1
+ d(x + y)/dy = 1
+
+ No return value.
+*/
 void AddNode::backward() {
     left->grad += grad;
     right->grad += grad;

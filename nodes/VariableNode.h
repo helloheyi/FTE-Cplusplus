@@ -11,25 +11,28 @@
 #include <stdio.h>
 
 /*
-     variable value in the graph.
-     param val initial value of the variable.
-     forward(): no operation
-     backward(): no operation
-
+ VariableNode represents an variable in the computational graph.
+ 
+ VariableNode stores a value that remains change during the forward and backward passes.
  */
+
 class VariableNode : public Node {
 public:
     /*
-    Constructor
-    param val initial value of the variable.
+    Constructs a VariableNode with a specified value.
+
+    Parameters:
+    - val: The constant value to be stored in the node.
     */
     VariableNode(double val);
+    
     /*
-     forward(): no operation 
+     The forward pass just sets 'value' to the variable's current value.
     */
     void forward() override;
+    
     /*
-     backward(): no operation
+     The backward pass just sets 'value' to the variable's current value.
     */
     void backward() override;
 };

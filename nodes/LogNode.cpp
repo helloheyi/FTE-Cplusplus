@@ -9,32 +9,52 @@
 #include "LogNode.h"
 
 /*
-Constructor to initialize LogNode with an input node.
-param I Pointer to the input node.
+ Constructor for LogNode to initialize the input node.
+
+ Parameters:
+ - I: Shared Smart pointer to the input node.
 */
 LogNode::LogNode(std::shared_ptr<Node> I) : input(I) {};
 
 /*
-Forward pass: ln(x)
-throws std::runtime_error If the input value is non-positive.
+ Computes the In(x) of the input node values using the formula:
+ value = log(input->getValue())
+ 
+ Throws:
+ - std::runtime_error if input->getValue() <= 0,
+   to avoid taking a logarithm of zero or negative values.
+
+ No return value.
 */
 void LogNode::forward(){
+    
     if (input->getValue() <= 0){
+        
         {throw std::runtime_error("Log by non positive or very small value in LogNode::forward().");}
     }
+    
     value = std::log(input->getValue());
     
 };
 
 /*
-Backward pass:
- ∂(ln(x))/∂x = 1 / x
-throws std::runtime_error If the input value is non-positive.
+ Propagates gradients from the output node to input node:
+
+ Gradients:
+ d(In(x)) = 1/x
+ 
+ Throws:
+ - std::runtime_error if input->getValue() == 0,
+   to avoid dividing zero
+ 
+ No return value.
 */
 void LogNode::backward(){
+    
     if (input->getValue() == 0){
         {throw std::runtime_error("Division by zero in LogNode::backward().");}
     }
+    
     input->grad += grad / input->getValue();
 };
     

@@ -6,19 +6,29 @@
 //
 
 #include "ConstantNode.h"
+
 /*
-Constructor
-param val initial value of the constant.
+ Constructor for ConstantNode to initialize a constant value.
+ The value is stored in the node and remains unchanged.
+
+ Parameters:
+ - val: The constant value to be stored.
 */
 ConstantNode::ConstantNode(double val) {
     value = val;
 }
+
 /*
- forward(): no operation
+ Performs the forward pass a ConstantNode.
+ 
+ As this node represents a constant, no computation is performed.
 */
 void ConstantNode::forward() {}
+
 /*
- backward(): no operation
+ Performs the backward pass for a ConstantNode.
+
+ As constant values do not influence gradients, no operations are required.
 */
 void ConstantNode::backward() {}
 

@@ -12,31 +12,37 @@
 #include <memory>
 
 /*
-    multiply of two nodes.
-    param l Shared Smart Pointer to left node
-    param r Shared Smart Pointer to right node
-    forward(): calcuate x + y
-    backward(): backpropagate gradients
+ MulNode represents a multiplication operation in the computational graph.
  
- */
+ Computes the multiplication of two input nodes and propagates gradients.
+*/
+
 class MulNode:public Node{
 public:
     std::shared_ptr<Node> left;
     std::shared_ptr<Node> right;
+
     /*
-     constructor to initialize left and right input nodes.
-     param l Shared Smart Pointer to left node
-     param r Shared Smart Pointer to right node
+     Constructs a MulNode with two input nodes.
+
+     Parameters:
+     - L: Shared pointer to the left input node.
+     - R: Shared pointer to the right input node.
     */
     MulNode(std::shared_ptr<Node> L, std::shared_ptr<Node> R);
+    
     /*
-     Forward pass: x * y
-     */
+     Computes x * y in the forward pass.
+   */
     void forward() override;
+    
     /*
-     Backward pass: x+y
-     ∂(x * y)/∂x = y; ∂(x * y)/∂y = x, both receive full gradient
-     */
+     Performs the backward pass for x * y.
+
+     Gradients:
+     d(x * y)/dx = y
+     d(x * y)/dy = x
+    */
     void backward() override;
 };
 

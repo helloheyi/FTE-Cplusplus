@@ -6,19 +6,28 @@
 //
 
 #include "VariableNode.h"
+
 /*
-Constructor
-param val initial value of the variable.
+ Constructor for ConstantNode to initialize a constant value.
+ 
+ Parameters:
+ - val: The constant value to be stored.
 */
 VariableNode::VariableNode(double val) {
     value = val;
 }
+
 /*
- forward(): no operation
+ Performs the forward pass a VariableNode.
+ 
+ No operation is required. The stored value remains as is.
 */
 void VariableNode::forward() {}
+
 /*
- backward(): no operation
+ Performs the backward pass a VariableNode.
+ 
+ No operation is required. The stored value remains as is.
 */
 void VariableNode::backward() {}
 

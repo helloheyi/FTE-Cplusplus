@@ -10,27 +10,25 @@
 #include "Node.h"
 
 /*
- constant value in the graph.
- param val initial value of the variable.
- forward(): no operation
- backward(): no operation
-
+ ConstantNode represents an Constant in the computational graph.
+ 
+ ConstantNode stores a fixed value that remains unchanged during the forward and backward passes.
  */
 
 class ConstantNode: public Node{
     public:
     /*
-    Constructor
-    param val initial value of the constant.
+    Constructs a ConstantNode with a specified value.
+
+    Parameters:
+    - val: The constant value to be stored in the node.
     */
     ConstantNode(double val);
-    /*
-     forward(): no operation
-    */
+    
+    //As this node represents a constant, no computation is performed.
     void forward() override;
-    /*
-     backward(): no operation
-    */
+   
+    // Constants have no contribution to gradients, so no operation is performed.
     void backward() override;
 };
 

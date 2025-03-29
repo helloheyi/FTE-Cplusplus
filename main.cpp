@@ -13,11 +13,15 @@
 #include <vector>
 
 /*
- central finiteDifference method
- param f as function variable used for finiteDifference
- param x variable
- param h shocked value
- return double df/dx
+ Central finite difference method to approximate the derivative of a function.
+ 
+ Parameters:
+  - f: Function to differentiate (std::function<double(double)>)
+  - x: Point at which to evaluate the derivative
+  - h: Small increment value for finite difference approximation
+
+  Returns:
+  - Approximation of the derivative df/dx
  */
 double finiteDifference(std::function<double(double)> f, double x, double h) {
     return (f(x + h) - f(x - h)) / (2.0 * h);
@@ -25,22 +29,32 @@ double finiteDifference(std::function<double(double)> f, double x, double h) {
 
 
 /*
- f(x) = 5 + x^3 + ln((x^2 - 5) * (4 - 3x)) / (x - 4) as test case 1
- param double x
- return f(x)
- 
- */
+ Function definition: f(x) = 5 + x^3 + ln((x^2 - 5) * (4 - 3x)) / (x - 4)
+ Used as a test case for automatic differentiation.
+
+ Parameters:
+ - x: Input value
+
+ Returns:
+ - Result of f(x)
+*/
 double f1(double x) {
     return 5.0 + std::pow(x, 3) + std::log((std::pow(x, 2) - 5.0) * (4.0 - 3.0 * x)) / (x - 4.0);
 }
 
+
 /*
- f(x) = 5 + x^3 + ln((x^2 - 5) * (4 - 3x)) / (x - 4) as test case 1
- param double x_0: initial value of the variable
- return: a vector
- f(x) value
- Gradient df/dx
- */
+ Runs a computational graph test for the function f(x).
+ Performs both forward and backward passes using the Tape structure.
+
+ Parameters:
+ - x_0: Initial value of the variable x
+
+ Returns:
+ - A vector containing:
+   - f(x_0) (Function value)
+   - f'(x_0) (Gradient using reverse-mode autodiff)
+*/
 auto runGraphTest1(double x_0) {
     Tape tape;
     // variable node for x
@@ -73,17 +87,24 @@ auto runGraphTest1(double x_0) {
     // forward and backward pass
     tape.forward();
     tape.backward();
-    return std::vector<double>{x->getValue(), x->getGrad()};
+    return std::vector<double>{final->getValue(), x->getGrad()};
 }
 
 
 /*
- f(x,y) = x^3 * y+ln(x) * y
- param double x_0: initial value of the variable
- return: a vector
- f(x) value
- Gradient df/dx
- */
+ Runs a computational graph test for the function f(x, y) = x^3 * y + ln(x) * y.
+ Performs both forward and backward passes using the Tape structure.
+
+ Parameters:
+ - x_0: Initial value of x
+ - y_0: Initial value of y
+
+ Returns:
+ - A vector containing:
+   - f(x_0, y_0) (Function value)
+   - df/dx (Gradient w.r.t. x)
+   - df/dy (Gradient w.r.t. y)
+*/
 auto runGraphTest2(double x_0, double y_0) {
     std::cout << "\nRunning Graph Test2 with x_0 = " << x_0 << " and y_0 = " << y_0 << std::endl;
     Tape tape;
@@ -106,8 +127,9 @@ auto runGraphTest2(double x_0, double y_0) {
     
 }
 
+
 int main() {
-    //one variable test case
+    //Test 1: Single-variable function
     // f(x) = 5 + x^3 + ln((x^2 - 5) * (4 - 3x)) / (x - 4)
     double x_0 = 2;
     auto f1_result =runGraphTest1(x_0);
@@ -117,8 +139,8 @@ int main() {
     std::cout << "f1'(" << x_0 << ") = " << f1_result[1] << std::endl;
     
     
-//     two variables test case
-//     f(x,y) = x^3 * y+ln(x) * y
+    // Test 2: Multi-variable function
+    // f(x,y) = x^3 * y+ln(x) * y
     double test2_x_0 = 2.0;
     double test2_y_0 = 3.0;
     auto f2_result =runGraphTest2(test2_x_0,test2_y_0);
@@ -126,8 +148,8 @@ int main() {
     std::cout << "df/dx(" << test2_x_0 << ", " << test2_y_0 << ") = " << f2_result[1] << std::endl;
     std::cout << "df/dy(" << test2_x_0 << ", " << test2_y_0 << ") = " << f2_result[2] << std::endl;
     
-    
-    // run for edge case as x = -1, x = 0, x = 0.0001, x= pow(10,1000000) and empty Tape
+    // Edge case tests
+    // as x = -1, x = 0, x = 0.0001, x= pow(10,1000000) and empty Tape
     std::cout << "run for edge cases \n" << std::endl;
     std::vector<double> arr = {-1, 0, 0.00001, std::pow(10, 100000)};
     for (int i = 0; i < arr.size(); ++i){
@@ -140,6 +162,7 @@ int main() {
        
     }
     Tape tape;
+    // Empty Tape warning
     // a warning: No nodes in tape to run forward.
     tape.forward();
     return 0;

@@ -12,28 +12,42 @@
 #include <memory>
 
 /*
-    Log of a node.
-    param I Shared Smart Pointer to the input node
-    forward(): calcuate In(x), with running time error  checks.
-    backward(): backpropagate gradients, with running time error  checks.
- */
+ LogNode represents IN in the computational graph.
+ 
+ Computes the In of input node and propagates gradients.
+*/
 class LogNode: public Node {
+    
 public:
+    
     std::shared_ptr<Node> input;
     /*
-    Constructor to initialize LogNode with an input node.
-    param I Shared Smart Pointer to the input node.
+     Constructs a LogNode with a input node.
+
+     Parameters:
+     - I: Shared Smart to the node used as the input to ln(x).
     */
     LogNode(std::shared_ptr<Node> I);
+    
     /*
-    Forward pass: ln(x)
+     Performs the forward pass by computing ln(x).
+     
+     Throws:
+     - std::runtime_error if x <= 0.
     */
     void forward() override;
+    
     /*
-    Backward pass:
-     ∂(ln(x))/∂x = 1 / x
+     Performs the backward pass for In(x)
+
+     Gradients:
+     d(In(x))/dx = 1/x
+
+     Throws:
+     - std::runtime_error if x == 0.
     */
     void backward() override;
 };
 
 #endif /* LogNode_h */
+

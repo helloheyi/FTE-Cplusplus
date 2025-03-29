@@ -11,32 +11,40 @@
 #include <stdio.h>
 #include <memory>
 /*
-    power of a node.
-    param B Shared Smart Pointer to base node
-    param exp The constant exponent
-    forward(): calcuate X^N, with running time error  checks.
-    backward(): backpropagate gradients, with running time error  checks.
+ PowNode represents an power operation in the computational graph.
  
- */
+ Computes the PowNode of an input node and propagates gradients.
+*/
 class PowNode: public Node {
 public:
     std::shared_ptr<Node> base;
     double exponent;
+    
     /*
-    constructor to initialize a base node and an exponent.
-    param B Pointer to base node
-    param exp The constant exponent
+     Constructs an PowNode with one input node and a constant exponent.
+
+     Parameters:
+     - B: Shared Smart pointer to to base node.
+     - exp: The constant exponent
     */
     PowNode(std::shared_ptr<Node> B, double exp);
+    
     /*
-    Forward pass: X^N
-    throws std::runtime_error If the result overflows to infinity.
+    Computes B^(exp) in the forward pass.
+
+    Throws:
+    - std::runtime_error If the result overflows to infinity.
     */
     void forward() override;
+    
     /*
-    Backward pass:
-    ∂(x^n)/∂x = n * x^(n-1)
-    throws std::runtime_error If the result overflows to infinity.
+     Performs the backward pass for X^(exp).
+
+     Gradients:
+     d(B^(exp))/dB = exp * B^(exp - 1)
+     
+     Throws:
+     - std::runtime_error If the result overflows to infinity.
     */
     void backward() override;
 };

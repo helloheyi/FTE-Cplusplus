@@ -15,7 +15,7 @@
  - B: Shared Smart pointer to the base node
  - exp: A constant value
 */
-PowNode::PowNode(std::shared_ptr<Node> B, double exp) : base(B), exponent(exp) {};
+PowNode::PowNode(NodePtr b, double e) : base(b), exponent(e) {}
 
 /*
  Computes the B^(exp) of the input node value using the formula:
@@ -27,8 +27,8 @@ PowNode::PowNode(std::shared_ptr<Node> B, double exp) : base(B), exponent(exp) {
  No return value.
 */
 void PowNode::forward() {
-    value = std::pow(base->getValue(), exponent);
-    
+    base->forward();
+    value = std::pow(base->value, exponent);
     if (std::isinf(value))
     {throw std::overflow_error("Overflow as isinf for large exponent in PowNode::forward.");}
 };
@@ -44,8 +44,9 @@ void PowNode::forward() {
  
  No return value.
 */
-void PowNode:: backward() {
-    base->grad += grad * exponent * std::pow(base->getValue(), exponent - 1);
+void PowNode::backward(double topGrad) {
+    double dfdx = exponent * std::pow(base->value, exponent - 1.0);
+    base->backward(topGrad * dfdx);
     if (std::isinf(base->grad))
     {throw std::overflow_error("Overflow as isinf for large exponent in PowNode::forward.");}
 }

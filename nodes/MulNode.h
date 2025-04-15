@@ -19,8 +19,8 @@
 
 class MulNode:public Node{
 public:
-    std::shared_ptr<Node> left;
-    std::shared_ptr<Node> right;
+    NodePtr left, right;
+
 
     /*
      Constructs a MulNode with two input nodes.
@@ -29,8 +29,8 @@ public:
      - L: Shared pointer to the left input node.
      - R: Shared pointer to the right input node.
     */
-    MulNode(std::shared_ptr<Node> L, std::shared_ptr<Node> R);
-    
+    MulNode(NodePtr l, NodePtr r);
+
     /*
      Computes x * y in the forward pass.
    */
@@ -43,7 +43,8 @@ public:
      d(x * y)/dx = y
      d(x * y)/dy = x
     */
-    void backward() override;
+    void backward(double topGrad) override;
+
 };
 
 #endif /* MulNode_h */

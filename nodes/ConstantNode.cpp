@@ -30,5 +30,5 @@ void ConstantNode::forward() {}
 
  As constant values do not influence gradients, no operations are required.
 */
-void ConstantNode::backward() {}
+void ConstantNode::backward(double) {}
 

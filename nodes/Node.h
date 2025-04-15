@@ -7,6 +7,7 @@
 
 #ifndef Node_h
 #define Node_h
+#include <memory>
 
 /*
  Node is an abstract base class representing a generic node in a computational graph.
@@ -20,43 +21,15 @@
  - backward(): Propagates gradients to upstream nodes.
 */
 
-class Node{
-    public:
+class Node : public std::enable_shared_from_this<Node> {
+public:
+    using NodePtr = std::shared_ptr<Node>;
     double value = 0.0;
-    double grad = 0.0;
-    
-    /*
-     Computes this node's output value based on its inputs.
-     Pure virtual function and must be implemented by derived classes.
-    */
-    virtual void forward () = 0;
-    
-    /*
-     Backpropagates gradients backward to input nodes.
-     Pure virtual function and must be implemented by derived classes.
-    */
-    virtual void backward () = 0;
-    
-    /*
-     Retrieves the node's current value (result of the forward pass).
+    double grad = 0.0;    
 
-     Returns:
-     - The node's current value.
-    */
-    double getValue() const { return value; }
-    
-    /*
-     Retrieves the node's current gradient (accumulated from the backward pass).
-
-     Returns:
-     - The node's current gradient.
-    */
-    double getGrad() const { return grad; }
-    
-    /*
-     Virtual destructor to ensure proper cleanup of derived classes.
-    */
-    virtual ~Node() {}
+    virtual void forward() = 0;
+    virtual void backward(double topGrad) = 0;
+    virtual ~Node() = default;
 };
 
 #endif /* Node_h */

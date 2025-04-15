@@ -24,8 +24,8 @@ public:
     Parameters:
     - val: The constant value to be stored in the node.
     */
-    VariableNode(double val);
-    
+    explicit VariableNode(double val);
+
     /*
      The forward pass just sets 'value' to the variable's current value.
     */
@@ -34,7 +34,7 @@ public:
     /*
      The backward pass just sets 'value' to the variable's current value.
     */
-    void backward() override;
+    void backward(double topGrad) override;  
 };
 
 #endif /* VariableNode_h */

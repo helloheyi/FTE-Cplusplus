@@ -26,8 +26,6 @@ void VariableNode::forward() {}
 
 /*
  Performs the backward pass a VariableNode.
- 
- No operation is required. The stored value remains as is.
-*/
-void VariableNode::backward() {}
+ */
+void VariableNode::backward(double topGrad) { grad += topGrad; }
 

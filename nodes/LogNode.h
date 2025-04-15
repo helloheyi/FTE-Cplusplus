@@ -20,15 +20,15 @@ class LogNode: public Node {
     
 public:
     
-    std::shared_ptr<Node> input;
+    NodePtr input;
     /*
      Constructs a LogNode with a input node.
 
      Parameters:
      - I: Shared Smart to the node used as the input to ln(x).
     */
-    LogNode(std::shared_ptr<Node> I);
-    
+    LogNode(NodePtr in);
+
     /*
      Performs the forward pass by computing ln(x).
      
@@ -46,7 +46,8 @@ public:
      Throws:
      - std::runtime_error if x == 0.
     */
-    void backward() override;
+    void backward(double topGrad) override;
+
 };
 
 #endif /* LogNode_h */

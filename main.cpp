@@ -1,17 +1,16 @@
 #include <iostream>
 #include <cmath>
-#include "ConstantNode.h"
-#include "VariableNode.h"
-#include "AddNode.h"
-#include "SubNode.h"
-#include "MulNode.h"
-#include "DivNode.h"
-#include "PowNode.h"
-#include "LogNode.h"
-#include "Tape.hpp"
+#include "nodes/ConstantNode.h"
+#include "nodes/VariableNode.h"
+#include "nodes/AddNode.h"
+#include "nodes/SubNode.h"
+#include "nodes/MulNode.h"
+#include "nodes/DivNode.h"
+#include "nodes/PowNode.h"
+#include "nodes/LogNode.h"
 #include <functional>
 #include <vector>
-
+#include <fstream>
 /*
  Central finite difference method to approximate the derivative of a function.
  
@@ -42,130 +41,176 @@ double f1(double x) {
     return 5.0 + std::pow(x, 3) + std::log((std::pow(x, 2) - 5.0) * (4.0 - 3.0 * x)) / (x - 4.0);
 }
 
-
-/*
- Runs a computational graph test for the function f(x).
- Performs both forward and backward passes using the Tape structure.
-
- Parameters:
- - x_0: Initial value of the variable x
-
- Returns:
- - A vector containing:
-   - f(x_0) (Function value)
-   - f'(x_0) (Gradient using reverse-mode autodiff)
-*/
-auto runGraphTest1(double x_0) {
-    Tape tape;
-    // variable node for x
-    auto x = tape.create<VariableNode>(x_0);
-    // x^2 using PowNode
-    auto x2 = tape.create<PowNode>(x, 2.0);
-    // (x^2 - 5) using SubNode
-    auto c5 = tape.create<ConstantNode>(5.0);
-    auto left = tape.create<SubNode>(x2, c5);
-    // Perform (3 * x) using MulNode
-    auto c3 = tape.create<ConstantNode>(3.0);
-    auto tmp = tape.create<MulNode>(c3, x);
-    // (4 - 3 * x) using SubNode
-    auto c4 = tape.create<ConstantNode>(4.0);
-    auto right = tape.create<SubNode>(c4, tmp);
-    // (x^2 - 5) * (4 - 3 * x) using MulNode
-    auto mult = tape.create<MulNode>(left, right);
-    // ln((x^2 - 5) * (4 - 3 * x)) using LogNode
-    auto ln_part = tape.create<LogNode>(mult);
-    // (x - 4) using SubNode
-    auto denom = tape.create<SubNode>(x, c4);
-    //  ln_part / denom using DivNode
-    auto fraction = tape.create<DivNode>(ln_part, denom);
-    // x^3 using PowNode
-    auto x3 = tape.create<PowNode>(x, 3.0);
-    // 5 + x^3 using AddNode
-    auto tmp2 = tape.create<AddNode>(c5, x3);
-    // computation: (5 + x^3) + (ln_part / denom) using AddNode
-    auto final = tape.create<AddNode>(tmp2, fraction);
-    // forward and backward pass
-    tape.forward();
-    tape.backward();
-    return std::vector<double>{final->getValue(), x->getGrad()};
-}
-
-
-/*
- Runs a computational graph test for the function f(x, y) = x^3 * y + ln(x) * y.
- Performs both forward and backward passes using the Tape structure.
-
- Parameters:
- - x_0: Initial value of x
- - y_0: Initial value of y
-
- Returns:
- - A vector containing:
-   - f(x_0, y_0) (Function value)
-   - df/dx (Gradient w.r.t. x)
-   - df/dy (Gradient w.r.t. y)
-*/
-auto runGraphTest2(double x_0, double y_0) {
-    std::cout << "\nRunning Graph Test2 with x_0 = " << x_0 << " and y_0 = " << y_0 << std::endl;
-    Tape tape;
-    auto x = tape.create<VariableNode>(x_0);
-    auto y = tape.create<VariableNode>(y_0);
-    // x^3 using PowNode
-    auto x3 = tape.create<PowNode>(x, 3.0);
-    // ln(x) using LogNode
-    auto ln_x = tape.create<LogNode>(x);
-    // x^3 * y using MulNode
-    auto x3y = tape.create<MulNode>(x3, y);
-    // ln(x) * y using MulNode
-    auto ln_xy = tape.create<MulNode>(ln_x, y);
-    // computation: x^3 * y + ln(x) * y using AddNode
-    auto final = tape.create<AddNode>(x3y, ln_xy);
-    // forward and backward pass
-    tape.forward();
-    tape.backward();
-    return std::vector<double>{final->getValue(), x->getGrad(), y->getGrad()};
-    
-}
-
-
-int main() {
-    //Test 1: Single-variable function
+int main(int argc, char* argv[]) {
+    // Test 1: Single-variable function
     // f(x) = 5 + x^3 + ln((x^2 - 5) * (4 - 3x)) / (x - 4)
-    double x_0 = 2;
-    auto f1_result =runGraphTest1(x_0);
-    std::cout << "\nRunning Graph Test 1 with x_0 = " << x_0 << std::endl;
-    std::cout << "Numerical f1'(2.0) ≈ " << finiteDifference(f1, x_0,0.001) << std::endl;
-    std::cout << "f1(" << x_0 << ") = " << f1_result[0] << std::endl;
-    std::cout << "f1'(" << x_0 << ") = " << f1_result[1] << std::endl;
-    
-    
-    // Test 2: Multi-variable function
-    // f(x,y) = x^3 * y+ln(x) * y
-    double test2_x_0 = 2.0;
-    double test2_y_0 = 3.0;
-    auto f2_result =runGraphTest2(test2_x_0,test2_y_0);
-    std::cout << "f(" << test2_x_0 << ", " << test2_y_0 << ") = " << f2_result[0] << std::endl;
-    std::cout << "df/dx(" << test2_x_0 << ", " << test2_y_0 << ") = " << f2_result[1] << std::endl;
-    std::cout << "df/dy(" << test2_x_0 << ", " << test2_y_0 << ") = " << f2_result[2] << std::endl;
-    
-    // Edge case tests
-    // as x = -1, x = 0, x = 0.0001, x= pow(10,1000000) and empty Tape
-    std::cout << "run for edge cases \n" << std::endl;
-    std::vector<double> arr = {-1, 0, 0.00001, std::pow(10, 100000)};
-    for (int i = 0; i < arr.size(); ++i){
-        try {
-                std::cout << "f1(" << arr[i] << ") = " << runGraphTest1(arr[i])[0] << std::endl;
-                std::cout << "f1'(" << arr[i] << ") = " << runGraphTest1(arr[i])[1] << std::endl;
-            } catch (const std::exception& e) {
-                std::cerr << "Exception caught during edge case testing: " << e.what() << std::endl;
-            }
-       
+    std::cout << "The f(x) = 5 + x^3 "
+    "+ ln((x^2 - 5) * (4 - 3x)) / (x - 4)\n";
+    double x_0;
+    // If user provided an argument, parse it:
+    if (argc >= 2) {
+        x_0 = std::stod(argv[1]);
+        std::cout << "Using command-line argument x_0 = " << x_0 << std::endl;
     }
-    Tape tape;
-    // Empty Tape warning
-    // a warning: No nodes in tape to run forward.
-    tape.forward();
+    // Otherwise, prompt the user to enter the value:
+    else {
+        std::cout << "Please enter x_0 for the function f(x): ";
+        std::cin >> x_0;
+        if (!std::cin) {
+        std::cerr << "Invalid input. Exiting.\n";
+        return 1;
+        }
+    }
+    // Prepare file to write results
+    const std::string filename = "results.txt";
+    std::ofstream outfile(filename);
+    if (!outfile.is_open()) {
+        std::cerr << "Error: could not open " << filename << " for writing.\n";
+        return 1;
+    }
+    
+    using NodePtr = std::shared_ptr<Node>;
+    auto x = std::make_shared<VariableNode>(x_0);
+
+    NodePtr expr = std::make_shared<AddNode>(
+            std::make_shared<ConstantNode>(5.0),
+            std::make_shared<AddNode>(
+                std::make_shared<PowNode>(x, 3.0),
+                std::make_shared<DivNode>(
+                    std::make_shared<LogNode>(
+                        std::make_shared<MulNode>(
+                            std::make_shared<SubNode>(
+                                std::make_shared<PowNode>(x, 2.0),
+                                std::make_shared<ConstantNode>(5.0)
+                            ),
+                            std::make_shared<SubNode>(
+                                std::make_shared<ConstantNode>(4.0),
+                                std::make_shared<MulNode>(
+                                    std::make_shared<ConstantNode>(3.0), x)
+                            )
+                        )
+                    ),
+                    std::make_shared<SubNode>(x, std::make_shared<ConstantNode>(4.0))
+                )
+            )
+        );
+    
+    expr->forward();
+    expr->backward(1.0);
+    outfile << "The f(x) = 5 + x^3 + ln((x^2 - 5) * (4 - 3x)) / (x - 4)"  << ":\n";
+    outfile << "For x = " << x_0 << ":\n";
+    outfile << "f1(x)  = " <<  expr->value << "\n";
+    outfile << "f1'(x) (Back-propagation) = " << x->grad << "\n";
+    outfile << "f1'(x) (Finite Diff)  = " << finiteDifference(f1, x_0, 0.001) << "\n";
+    outfile << "\n";
+    
+
+    // Test 2: Multi-variable function
+    // f(x, y) = x^3 * y + ln(x) * y
+    std::cout << "\n For the second test:\n"
+                    " f(x, y) = x^3 * y + ln(x) * y\n"
+                    "We need two values for x and y.\n";
+    
+    double test2_x_0, test2_y_0;
+    if (argc >= 3) {
+        test2_x_0 = std::stod(argv[1]);
+        test2_y_0 = std::stod(argv[2]);
+        std::cout << "Using command-line arguments: x_0 = " << test2_x_0
+        << ", y_0 = " << test2_y_0 << std::endl;
+    }
+    else {
+        // Prompt the user
+        std::cout << "Please enter x_0 for test2: ";
+        std::cin >> test2_x_0;
+        if (!std::cin) {
+            std::cerr << "Invalid x_0. Exiting.\n";
+            return 1;
+            }
+
+        std::cout << "Please enter y_0 for test2: ";
+        std::cin >> test2_y_0;
+        if (!std::cin) {
+            std::cerr << "Invalid y_0. Exiting.\n";
+            return 1;
+            }
+    }
+    
+    
+    using NodePtr_test2 = std::shared_ptr<Node>;
+    auto test2_x = std::make_shared<VariableNode>(test2_x_0);
+    auto test2_y = std::make_shared<VariableNode>(test2_y_0);
+
+    NodePtr_test2 expr_test2 = std::make_shared<AddNode>(
+        std::make_shared<MulNode>(
+            std::make_shared<PowNode>(test2_x, 3.0),test2_y
+        ),
+        std::make_shared<MulNode>(
+            std::make_shared<LogNode>(test2_x), test2_y
+        )
+    );
+
+    expr_test2->forward();
+    expr_test2->backward(1.0);
+    
+    outfile << "The f(x, y) = x^3 * y + ln(x) * y"  << ":\n";
+    outfile << "For x = " << test2_x_0 << " y = " << test2_y_0 <<":\n";
+    outfile << "f2(x, y)  = " << expr_test2 -> value << "\n";
+    outfile << "df/dx(2, 3)  = " << test2_x -> grad << "\n";
+    outfile << "df/dy(2, 3) = " << test2_y -> grad << "\n";
+    outfile.close();
+    std::cout << "Results are saved in results.txt" << std::endl;
     return 0;
+
+//
+//       {
+//           Tape tape;
+//           auto x = tape.create<VariableNode>(test2_x_0);
+//           auto y = tape.create<VariableNode>(test2_y_0);
+//
+//           auto final = tape.create<AddNode>(
+//               tape.create<MulNode>(
+//                   tape.create<PowNode>(x, 3.0),
+//                   y
+//               ),
+//               tape.create<MulNode>(
+//                   tape.create<LogNode>(x),
+//                   y
+//               )
+//           );
+//
+//           tape.forward();
+//           tape.backward();
+//           outfile << "The f(x, y) = x^3 * y + ln(x) * y"  << ":\n";
+//           outfile << "For x = " << test2_x_0 << " y = " << test2_y_0 <<":\n";
+//           outfile << "f2(x, y)  = " << final->getValue() << "\n";
+//           outfile << "df/dx(2, 3)  = " << x->getGrad() << "\n";
+//           outfile << "df/dy(2, 3) = " << y->getGrad() << "\n";
+//       }
+//
+//    outfile.close();
+//
+//    std::cout << "Results are saved in results.txt" << std::endl;
+//    return 0;
+
+//    // Edge-case tests:
+//    //   x = -1, x = 0, x = 0.00001, x = 10^100000
+//    //   and an empty Tape usage example
+//    std::cout << "\nRunning edge case tests...\n" << std::endl;
+//    std::vector<double> arr = {-1, 0, 0.00001, std::pow(10, 100000)};
+//
+//    for (double x_val : arr) {
+//        try {
+//            auto results = runGraphTest1(x_val);
+//            std::cout << "f1(" << x_val << ") = " << results[0] << std::endl;
+//            std::cout << "f1'(" << x_val << ") = " << results[1] << std::endl;
+//        } catch (const std::exception& e) {
+//            std::cerr << "Exception caught during edge-case testing: " << e.what() << std::endl;
+//        }
+//    }
+//
+//    // Demonstration of an empty Tape
+//    Tape tape;
+//    // This should emit a warning like "No nodes in tape to run forward."
+//    tape.forward();
+//
 }
-
-

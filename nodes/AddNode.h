@@ -19,8 +19,7 @@
 class AddNode:public Node{
 public:
 
-    std::shared_ptr<Node> left;
-    std::shared_ptr<Node> right;
+    NodePtr left, right;
     /*
      Constructs an AddNode with two input nodes.
 
@@ -28,8 +27,8 @@ public:
      - L: Shared Smart pointer to the left input node.
      - R: Shared Smart pointer to the right input node.
     */
-    AddNode(std::shared_ptr<Node> L, std::shared_ptr<Node> R);
-    
+    AddNode(NodePtr l, NodePtr r);
+
     /*
      Computes x + y in the forward pass.
     */
@@ -42,7 +41,7 @@ public:
      d(x + y)/dx = 1
      d(x + y)/dy = 1
     */
-    void backward() override;
+    void backward(double topGrad) override;
 };
 
 #endif /* AddNode_h */

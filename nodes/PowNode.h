@@ -17,7 +17,7 @@
 */
 class PowNode: public Node {
 public:
-    std::shared_ptr<Node> base;
+    NodePtr base;
     double exponent;
     
     /*
@@ -27,8 +27,8 @@ public:
      - B: Shared Smart pointer to to base node.
      - exp: The constant exponent
     */
-    PowNode(std::shared_ptr<Node> B, double exp);
-    
+    PowNode(NodePtr b, double e);
+
     /*
     Computes B^(exp) in the forward pass.
 
@@ -46,6 +46,6 @@ public:
      Throws:
      - std::runtime_error If the result overflows to infinity.
     */
-    void backward() override;
+    void backward(double topGrad) override;
 };
 #endif /* PowNode_h */

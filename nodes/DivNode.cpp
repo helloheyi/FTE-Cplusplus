@@ -16,7 +16,7 @@
  - L: Shared Smart pointer to the numerator node.
  - R: Shared Smart pointer to the denominator node.
 */
-DivNode:: DivNode(std::shared_ptr<Node> L,std::shared_ptr<Node> R) : left(L), right(R) {};
+DivNode::DivNode(NodePtr l, NodePtr r) : left(l), right(r) {}
 
 /*
  Computes the divide operation of two input nodes using the formula:
@@ -29,12 +29,13 @@ DivNode:: DivNode(std::shared_ptr<Node> L,std::shared_ptr<Node> R) : left(L), ri
 */
 void DivNode::forward() {
     
-    double rv = right->getValue();
+    left->forward();
+    right->forward();
     
-    if (rv == 0.0)
+    if (right->value == 0.0)
     {throw std::runtime_error("Division by zero in DivNode::forward()");}
     
-    value = left->getValue() / rv;
+    value = left->value / right->value;
 };
 
 /*
@@ -50,12 +51,11 @@ void DivNode::forward() {
  
  No return value.
 */
-void DivNode::backward() {
+void DivNode::backward(double topGrad) {
     
-    double lv = left->getValue(), rv = right->getValue();
     
-    if (right->getValue() == 0.0) {throw std::runtime_error("Division by zero in DivNode::backward().");}
-    
-    left->grad += grad / rv;
-    right->grad -= grad * lv / (rv * rv);
+    if (right->value == 0.0) {throw std::runtime_error("Division by zero in DivNode::backward().");}
+    double denom = right->value * right->value;
+    left->backward(topGrad / right->value);
+    right->backward(-topGrad * left->value / denom);
 }

@@ -18,8 +18,7 @@
  */
 class DivNode: public Node{
 public:
-    std::shared_ptr<Node> left;
-    std::shared_ptr<Node> right;
+    NodePtr left, right;
     /*
      Constructs a DivNode that divides 'L' by 'R'.
 
@@ -27,8 +26,8 @@ public:
      - L: Shared Smart pointer to the numerator node
      - R: Shared Smart pointer to the denominator node
     */
-    DivNode(std::shared_ptr<Node> L, std::shared_ptr<Node> R);
-    
+    DivNode(NodePtr l, NodePtr r);
+
     /*
      Computes x / y in the forward pass.
 
@@ -47,8 +46,8 @@ public:
      Throws:
      - std::runtime_error if 'y' is zero.
     */
-    void backward() override;
-    
+    void backward(double topGrad) override;
+
 };
 
 #endif /* DivNode_h */

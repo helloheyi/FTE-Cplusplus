@@ -13,18 +13,18 @@
  - L: Shared Smart pointer to the left input node.
  - R: Shared Smart pointer to the right input node.
 */
-AddNode::AddNode(std::shared_ptr<Node> L,
-                 std::shared_ptr<Node> R) : left(L), right(R) {}
+AddNode::AddNode(NodePtr l, NodePtr r) : left(l), right(r) {}
 
 /*
  Computes the sum of the input node values using the formula:
- value = left->getValue() + right->getValue();
-
+ value = left->value + right->value;
+ 
  No return value.
 */
 void AddNode::forward() {
-    
-    value = left->getValue() + right->getValue();
+    left->forward();
+    right->forward();
+    value = left->value + right->value;
 }
 
 /*
@@ -36,7 +36,7 @@ void AddNode::forward() {
 
  No return value.
 */
-void AddNode::backward() {
-    left->grad += grad;
-    right->grad += grad;
+void AddNode::backward(double topGrad) {
+    left->backward(topGrad);
+    right->backward(topGrad);
 }

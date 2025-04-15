@@ -23,13 +23,13 @@ class ConstantNode: public Node{
     Parameters:
     - val: The constant value to be stored in the node.
     */
-    ConstantNode(double val);
-    
+    explicit ConstantNode(double val);
+
     //As this node represents a constant, no computation is performed.
     void forward() override;
    
     // Constants have no contribution to gradients, so no operation is performed.
-    void backward() override;
+    void backward(double) override;
 };
 
 #endif /* ConstantNode_h */

@@ -21,8 +21,8 @@
 
 class SubNode:public Node{
     public:
-        std::shared_ptr<Node> left;
-        std::shared_ptr<Node> right;
+        NodePtr left, right;
+
     /*
      Constructs an SubNode with two input nodes.
 
@@ -30,13 +30,12 @@ class SubNode:public Node{
      - L: Shared Smart pointer to the left input node.
      - R: Shared Smart pointer to the right input node.
     */
-    SubNode(std::shared_ptr<Node> L, std::shared_ptr<Node> R);
-    
+    SubNode(NodePtr l, NodePtr r);
+
     /*
      Computes x - y in the forward pass.
     */
     void forward() override;
-    
     /*
      Performs the backward pass for x - y.
 
@@ -44,7 +43,7 @@ class SubNode:public Node{
      d(x - y)/dx = 1
      d(x - y)/dy = 1
     */
-    void backward() override;
+    void backward(double topGrad) override;
 };
 
 #endif /* SubNode_h */

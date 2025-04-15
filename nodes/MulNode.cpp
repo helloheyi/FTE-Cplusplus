@@ -15,19 +15,19 @@
  - L: Shared Smart pointer to the left input node.
  - R: Shared Smart pointer to the right input node.
 */
-MulNode:: MulNode(std::shared_ptr<Node> L, std::shared_ptr<Node> R) : left(L), right(R) {};
+MulNode::MulNode(NodePtr l, NodePtr r) : left(l), right(r) {}
 
 /*
  Computes the multiplication of the input node values using the formula:
- value = left->getValue() * right->getValue();
-
+ value = left->value * right->value;
+ 
  No return value.
 */
 void MulNode::forward() {
-    
-    value = left->getValue() * right->getValue();
+    left->forward();
+    right->forward();
+    value = left->value * right->value;
 }
-
 /*
  Propagates gradients from the output node to both input nodes:
 
@@ -37,8 +37,7 @@ void MulNode::forward() {
 
  No return value.
 */
-void MulNode::backward() {
-    
-    left->grad += grad * right->getValue();
-    right->grad += grad * left->getValue();
+void MulNode::backward(double topGrad) {
+    left->backward(topGrad * right->value);
+    right->backward(topGrad * left->value);
 }

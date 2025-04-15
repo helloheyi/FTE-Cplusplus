@@ -14,7 +14,7 @@
  Parameters:
  - I: Shared Smart pointer to the input node.
 */
-LogNode::LogNode(std::shared_ptr<Node> I) : input(I) {};
+LogNode::LogNode(NodePtr in) : input(in) {}
 
 /*
  Computes the In(x) of the input node values using the formula:
@@ -27,14 +27,14 @@ LogNode::LogNode(std::shared_ptr<Node> I) : input(I) {};
  No return value.
 */
 void LogNode::forward(){
-    
-    if (input->getValue() <= 0){
+    input->forward();
+    if (input->value <= 0.0){
         
         {throw std::runtime_error("Log by non positive or very small value in LogNode::forward().");}
     }
     
-    value = std::log(input->getValue());
-    
+    value = std::log(input->value);
+
 };
 
 /*
@@ -49,13 +49,13 @@ void LogNode::forward(){
  
  No return value.
 */
-void LogNode::backward(){
+void LogNode::backward(double topGrad){
     
-    if (input->getValue() == 0){
+    if (input->value <= 0.0){
         {throw std::runtime_error("Division by zero in LogNode::backward().");}
     }
     
-    input->grad += grad / input->getValue();
+    input->backward(topGrad / input->value);
 };
     
 

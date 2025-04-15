@@ -1,0 +1,4 @@
+For x = 2:
+f1(x)  = 12.6534
+f1'(x) (Back-propagation) = 13.0767
+f1'(x) (Finite Diff)  = 13.0767

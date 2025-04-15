@@ -1,0 +1,11 @@
+The f(x) = 5 + x^3 + ln((x^2 - 5) * (4 - 3x)) / (x - 4):
+For x = 2:
+f1(x)  = 12.6534
+f1'(x) (Back-propagation) = 13.0767
+f1'(x) (Finite Diff)  = 13.0767
+
+The f(x, y) = x^3 * y + ln(x) * y:
+For x = 2 y = 3:
+f2(x, y)  = 26.0794
+df/dx(2, 3)  = 37.5
+df/dy(2, 3) = 8.69315
